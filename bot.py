@@ -1,21 +1,20 @@
 import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
-    Updater,
+    ApplicationBuilder,
     CommandHandler,
     CallbackQueryHandler,
     MessageHandler,
-    filters,  # Changed from Filters to filters
-    CallbackContext,
-    ApplicationBuilder,  # New in v20.x
-    ContextTypes,  # New in v20.x
+    filters,
+    ContextTypes,
+    ConversationHandler  # This was missing!
 )
 
 # Configuration - USING YOUR PROVIDED TOKEN (will be revoked after testing)
 TELEGRAM_TOKEN = '8022918713:AAEDN4RZ0TrhTJPe5G_DvpvebszR1VuMaU4'
 CHANNEL_USERNAME = '@yourchannel'  # Change this to your actual channel
 GROUP_USERNAME = '@yourgroup'      # Change this to your actual group
-TWITTER_USERNAME = '@yourtwitter'   # Change this to your actual Twitter
+TWITTER_USERNAME = '@yourtwitter'  # Change this to your actual Twitter
 
 # Bot states
 JOIN_CHANNEL, JOIN_GROUP, FOLLOW_TWITTER, SUBMIT_WALLET = range(4)
@@ -104,14 +103,14 @@ async def submit_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         "10 SOL is on its way to your wallet!\n\n"
         "Thank you for participating in our airdrop!"
     )
-    return -1  # Ends the conversation
+    return ConversationHandler.END
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
     await update.message.reply_text(
         'Airdrop registration cancelled. Type /start to begin again.'
     )
-    return -1
+    return ConversationHandler.END
 
 def main() -> None:
     """Run the bot."""
